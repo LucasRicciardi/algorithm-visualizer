@@ -1,14 +1,16 @@
-import type { AlgorithmState, AlgorithmStep } from '../types/types';
+import type { AlgorithmState, AlgorithmStep, GraphData, GraphNode, GraphEdge } from '../types/types';
 import { bubbleSort } from './algorithms/bubbleSort';
 import { mergeSort } from './algorithms/mergeSort';
 import { quickSort } from './algorithms/quickSort';
 import { linearSearch } from './algorithms/linearSearch';
 import { binarySearch } from './algorithms/binarySearch';
+import { dijkstra } from './algorithms/dijkstra';
 
-type AlgorithmType = 'bubbleSort' | 'mergeSort' | 'quickSort' | 'linearSearch' | 'binarySearch';
+type AlgorithmType = 'bubbleSort' | 'mergeSort' | 'quickSort' | 'linearSearch' | 'binarySearch' | 'dijkstra';
 
 export class AlgorithmController {
   private initialArray: number[];
+  private graphData: GraphData | undefined; 
   private steps: AlgorithmStep[] = [];
   private currentStepIndex: number = -1;
   private isPlaying: boolean = false;
@@ -16,7 +18,7 @@ export class AlgorithmController {
   private timerId: ReturnType<typeof setInterval> | null = null;
   private onStateChange: (state: AlgorithmState) => void;
   private currentAlgorithm: AlgorithmType = 'bubbleSort';
-  private targetValue: number = 0; // Default target
+  private targetValue: number = 0; 
 
   constructor(initialArray: number[], onStateChange: (state: AlgorithmState) => void) {
     this.initialArray = [...initialArray];
@@ -34,9 +36,8 @@ export class AlgorithmController {
   public setTarget(target: number) {
       if (this.targetValue === target) return;
       this.targetValue = target;
-      // Only reset steps if current algorithm is a search algorithm
       if (this.currentAlgorithm === 'linearSearch' || this.currentAlgorithm === 'binarySearch') {
-          this.reset(); // This will regenerate steps with new target
+          this.reset(); 
       }
   }
 
@@ -44,8 +45,45 @@ export class AlgorithmController {
       return this.currentAlgorithm;
   }
 
+  private generateRandomGraph(nodeCount: number = 6): GraphData {
+       const nodes: GraphNode[] = [];
+       const edges: GraphEdge[] = [];
+       const width = 800; 
+       const height = 400; 
+       
+       for (let i = 0; i < nodeCount; i++) {
+           nodes.push({
+               id: i,
+               x: Math.random() * (width - 100) + 50,
+               y: Math.random() * (height - 100) + 50
+           });
+       }
+
+       for (let i = 0; i < nodeCount; i++) {
+           if (i < nodeCount - 1) {
+                const weight = Math.floor(Math.random() * 20) + 1;
+                edges.push({ source: i, target: i + 1, weight });
+           }
+
+           const extraEdges = Math.floor(Math.random() * 2);
+           for (let j = 0; j < extraEdges; j++) {
+               const target = Math.floor(Math.random() * nodeCount);
+               if (target !== i && !edges.some(e => (e.source === i && e.target === target) || (e.source === target && e.target === i))) {
+                   const weight = Math.floor(Math.random() * 20) + 1;
+                   edges.push({ source: i, target, weight });
+               }
+           }
+       }
+       return { nodes, edges };
+  }
+
   private generateSteps() {
     let generator;
+    
+    if (this.currentAlgorithm === 'dijkstra' && !this.graphData) {
+        this.graphData = this.generateRandomGraph();
+    }
+
     switch (this.currentAlgorithm) {
         case 'mergeSort':
             generator = mergeSort(this.initialArray);
@@ -59,6 +97,9 @@ export class AlgorithmController {
         case 'binarySearch':
             generator = binarySearch(this.initialArray, this.targetValue);
             break;
+        case 'dijkstra':
+             generator = dijkstra(this.graphData!, 0); 
+             break;
         case 'bubbleSort':
         default:
             generator = bubbleSort(this.initialArray);
@@ -66,8 +107,10 @@ export class AlgorithmController {
     }
         
     this.steps = [];
-    for (const step of generator) {
-      this.steps.push(step);
+    if (generator && typeof generator[Symbol.iterator] === 'function') {
+        for (const step of generator) {
+          this.steps.push(step);
+        }
     }
   }
 
@@ -114,7 +157,7 @@ export class AlgorithmController {
           this.pause();
           this.play();
       }
-      this.emitState(); // Update speed in state
+      this.emitState(); 
   }
 
   public reset(newArray?: number[]) {
@@ -122,16 +165,19 @@ export class AlgorithmController {
       if (newArray) {
           this.initialArray = [...newArray];
       }
-      // Always regenerate steps on reset as algorithm might have changed 
-      // or array might have changed
+      
+      if (this.currentAlgorithm === 'dijkstra') {
+           this.graphData = this.generateRandomGraph();
+      } else {
+           this.graphData = undefined;
+      }
+
       this.generateSteps();
       this.currentStepIndex = -1;
       this.emitState();
   }
 
   public getCurrentState(): AlgorithmState {
-      // Reconstruct array state up to currentStepIndex
-      
       const currentArray = [...this.initialArray];
       for (let i = 0; i <= this.currentStepIndex; i++) {
             const step = this.steps[i];
@@ -139,15 +185,14 @@ export class AlgorithmController {
                 const [idx1, idx2] = step.indices;
                 [currentArray[idx1], currentArray[idx2]] = [currentArray[idx2], currentArray[idx1]];
             } else if (step.type === 'overwrite' && step.value !== undefined) {
-                // Handle overwrite
                 const [idx] = step.indices;
                 currentArray[idx] = step.value;
             }
-            // 'compare', 'highlight', 'found' don't modify array structure/values usually
       }
 
       return {
           array: currentArray,
+          graph: this.graphData,
           history: this.steps,
           currentStepIndex: this.currentStepIndex,
           isPlaying: this.isPlaying,

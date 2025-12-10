@@ -57,12 +57,29 @@ const PSEUDOCODE_BINARY = [
     { line: 8, text: '  return -1' },
 ];
 
-const PSEUDOCODES: Record<string, typeof PSEUDOCODE_BUBBLE> = {
+const PSEUDOCODE_DIJKSTRA = [
+    { line: 1, text: 'function Dijkstra(Graph, source):' },
+    { line: 2, text: '  dist[source] = 0' },
+    { line: 3, text: '  create vertex set Q' },
+    { line: 4, text: '  for each vertex v in Graph:' },
+    { line: 5, text: '    if v ≠ source: dist[v] = INFINITY' },
+    { line: 6, text: '    add v to Q' },
+    { line: 7, text: '  while Q is not empty:' },
+    { line: 8, text: '    u = vertex in Q with min dist[u]' },
+    { line: 9, text: '    remove u from Q' },
+    { line: 10, text: '    for each neighbor v of u:' },
+    { line: 11, text: '      alt = dist[u] + length(u, v)' },
+    { line: 12, text: '      if alt < dist[v]:' },
+    { line: 13, text: '        dist[v] = alt' },
+];
+
+const PSEUDOCODES: Record<string, { line: number; text: string }[]> = {
     'bubbleSort': PSEUDOCODE_BUBBLE,
     'mergeSort': PSEUDOCODE_MERGE,
     'quickSort': PSEUDOCODE_QUICK,
     'linearSearch': PSEUDOCODE_LINEAR,
-    'binarySearch': PSEUDOCODE_BINARY
+    'binarySearch': PSEUDOCODE_BINARY,
+    'dijkstra': PSEUDOCODE_DIJKSTRA,
 };
 
 export default function CodeViewer({ currentLine, algorithm = 'bubbleSort' }: CodeViewerProps) {

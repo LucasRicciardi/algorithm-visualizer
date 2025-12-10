@@ -30,9 +30,12 @@ export default function AlgorithmSelector({ value, onChange, disabled }: Algorit
                     <MenuItem value="bubbleSort">Bubble Sort</MenuItem>
                     <MenuItem value="mergeSort">Merge Sort</MenuItem>
                     <MenuItem value="quickSort">Quick Sort</MenuItem>
-                    <ListSubheader>Searching</ListSubheader>
+                    <ListSubheader disableSticky>Searching</ListSubheader>
                     <MenuItem value="linearSearch">Linear Search</MenuItem>
                     <MenuItem value="binarySearch">Binary Search</MenuItem>
+                    
+                    <ListSubheader disableSticky>Graph & Pathfinding</ListSubheader>
+                    <MenuItem value="dijkstra">Dijkstra's Algorithm</MenuItem>
                 </Select>
             </FormControl>
         </Box>

@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Container, Box, Typography, Button, TextField, Paper, useTheme } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import ArrayVisualizer from '../components/ArrayVisualizer';
+import GraphVisualizer from '../components/GraphVisualizer';
 import Controls from '../components/Controls';
 import CodeViewer from '../components/CodeViewer';
 import InputDataDialog from '../components/InputDataDialog';
@@ -136,7 +137,7 @@ export default function VisualizerPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
              <Box>
                  <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : currentAlgo === 'quickSort' ? 'Quick Sort' : currentAlgo === 'linearSearch' ? 'Linear Search' : currentAlgo === 'binarySearch' ? 'Binary Search' : 'Bubble Sort'}
+                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : currentAlgo === 'quickSort' ? 'Quick Sort' : currentAlgo === 'linearSearch' ? 'Linear Search' : currentAlgo === 'binarySearch' ? 'Binary Search' : currentAlgo === 'dijkstra' ? "Dijkstra's Algorithm" : 'Bubble Sort'}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                     {currentAlgo === 'mergeSort' 
@@ -147,6 +148,8 @@ export default function VisualizerPage() {
                         ? "Linear Search sequentially checks each element of the list until a match is found or the whole list has been searched."
                         : currentAlgo === 'binarySearch'
                         ? "Binary Search compares the target value to the middle element of the array. If they are not equal, the half in which the target cannot lie is eliminated."
+                        : currentAlgo === 'dijkstra'
+                        ? "Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph, which may represent, for example, road networks."
                         : "Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order."}
                 </Typography>
              </Box>
@@ -173,7 +176,11 @@ export default function VisualizerPage() {
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 3 }}>
             {/* Left Column: Visualization */}
             <Box sx={{ flex: { lg: 2 }, display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
-                <ArrayVisualizer state={algoState} />
+                {currentAlgo === 'dijkstra' ? (
+                    <GraphVisualizer state={algoState} />
+                ) : (
+                    <ArrayVisualizer state={algoState} />
+                )}
                 
                 <Controls 
                     onPlay={handlePlay}
@@ -199,8 +206,6 @@ export default function VisualizerPage() {
             <Box sx={{ flex: { lg: 1 }, display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
                 <CodeViewer currentLine={currentStep?.line} algorithm={currentAlgo} />
                 
-                {/* Stats Placeholder */}
-                
                 {/* Stats & Complexity Card */}
                  <Paper 
                     elevation={3} 
@@ -220,10 +225,10 @@ export default function VisualizerPage() {
                             Complexity
                         </Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
-                            Time: {currentAlgo === 'binarySearch' ? 'O(log N)' : currentAlgo === 'linearSearch' ? 'O(N)' : currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : 'O(N²)'}
+                            Time: {currentAlgo === 'binarySearch' ? 'O(log N)' : currentAlgo === 'linearSearch' ? 'O(N)' : currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : currentAlgo === 'dijkstra' ? 'O(E + V log V)' : 'O(N²)'}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
-                             Space: {currentAlgo === 'mergeSort' ? 'O(N)' : currentAlgo === 'quickSort' || currentAlgo === 'binarySearch' ? 'O(log N)' : 'O(1)'}
+                             Space: {currentAlgo === 'mergeSort' ? 'O(N)' : currentAlgo === 'quickSort' || currentAlgo === 'binarySearch' ? 'O(log N)' : currentAlgo === 'dijkstra' ? 'O(V + E)' : 'O(1)'}
                         </Typography>
                     </Box>
                     
@@ -236,7 +241,7 @@ export default function VisualizerPage() {
                                algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === 'compare').length
                             }
                         </Typography>
-                        {currentAlgo !== 'linearSearch' && currentAlgo !== 'binarySearch' && (
+                        {currentAlgo !== 'linearSearch' && currentAlgo !== 'binarySearch' && currentAlgo !== 'dijkstra' && (
                              <Typography variant="body2" color="text.secondary">
                                  {currentAlgo === 'mergeSort' ? 'Overwrites' : 'Swaps'}: {
                                 algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === (currentAlgo === 'mergeSort' ? 'overwrite' : 'swap')).length
