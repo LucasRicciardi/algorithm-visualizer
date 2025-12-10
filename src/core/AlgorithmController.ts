@@ -20,7 +20,7 @@ export class AlgorithmController {
   private currentAlgorithm: AlgorithmType = 'bubbleSort';
   private targetValue: number = 0; // Default target
   private startNode: number = 0; // Dijkstra Start
-  private endNode: number = 49; // Dijkstra End
+  private endNode: number = 24; // Dijkstra End
 
   constructor(initialArray: number[], onStateChange: (state: AlgorithmState) => void) {
     this.initialArray = [...initialArray];
@@ -57,7 +57,7 @@ export class AlgorithmController {
       return this.currentAlgorithm;
   }
 
-  private generateRandomGraph(nodeCount: number = 50): GraphData {
+  private generateRandomGraph(nodeCount: number = 25): GraphData {
        const nodes: GraphNode[] = [];
        const edges: GraphEdge[] = [];
        const width = 800; // Canvas abstract width

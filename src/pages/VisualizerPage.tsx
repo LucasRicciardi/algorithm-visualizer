@@ -26,7 +26,7 @@ export default function VisualizerPage() {
 
   const [targetValue, setTargetValue] = useState(42);
   const [startNode, setStartNode] = useState(0);
-  const [endNode, setEndNode] = useState(49);
+  const [endNode, setEndNode] = useState(24);
 
   useEffect(() => {
       // Initialize controller on mount
