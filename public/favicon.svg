@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00E5FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D500F9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Connections -->
+  <line x1="32" y1="12" x2="12" y2="48" stroke="url(#grad)" stroke-width="4" stroke-linecap="round" />
+  <line x1="32" y1="12" x2="52" y2="48" stroke="url(#grad)" stroke-width="4" stroke-linecap="round" />
+  <line x1="12" y1="48" x2="52" y2="48" stroke="url(#grad)" stroke-width="4" stroke-linecap="round" />
+  <line x1="32" y1="12" x2="32" y2="34" stroke="url(#grad)" stroke-width="4" stroke-linecap="round" />
+
+  <!-- Nodes -->
+  <circle cx="32" cy="12" r="8" fill="white" stroke="url(#grad)" stroke-width="2" />
+  <circle cx="12" cy="48" r="8" fill="white" stroke="url(#grad)" stroke-width="2" />
+  <circle cx="52" cy="48" r="8" fill="white" stroke="url(#grad)" stroke-width="2" />
+  <circle cx="32" cy="34" r="5" fill="white" stroke="url(#grad)" stroke-width="2" />
+
+</svg>
