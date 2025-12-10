@@ -1,4 +1,4 @@
-import { Container, Grid, Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
+import { Container, Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
@@ -22,7 +22,7 @@ export default function HomePage() {
     const navigate = useNavigate();
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 8, mb: 4 }}>
+        <Container maxWidth={false} sx={{ mt: 8, mb: 4 }}>
             <Box sx={{ textAlign: 'center', mb: 8 }}>
                  <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 800 }}>
                     Visualize Algorithms
@@ -32,9 +32,9 @@ export default function HomePage() {
                 </Typography>
             </Box>
 
-            <Grid container spacing={4}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'center' }}>
                 {ALGORITHMS.map((algo) => (
-                    <Grid item xs={12} sm={6} md={4} key={algo.id}>
+                    <Box key={algo.id} sx={{ flex: '1 1 300px', maxWidth: '400px' }}>
                         <Card 
                             elevation={0}
                             sx={{ 
@@ -63,9 +63,9 @@ export default function HomePage() {
                                 </CardContent>
                             </CardActionArea>
                         </Card>
-                    </Grid>
+                    </Box>
                 ))}
-            </Grid>
+            </Box>
         </Container>
     );
 }

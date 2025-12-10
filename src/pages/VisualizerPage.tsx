@@ -67,7 +67,7 @@ export default function VisualizerPage() {
   const currentStep = algoState.currentStepIndex >= 0 ? algoState.history[algoState.currentStepIndex] : null;
 
   return (
-    <Container maxWidth="xl" sx={{ mt: 4, mb: 4, flex: 1 }}>
+    <Container maxWidth={false} sx={{ mt: 4, mb: 4, flex: 1 }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Header with Selector */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
