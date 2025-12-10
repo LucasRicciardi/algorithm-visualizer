@@ -1,4 +1,4 @@
-import { Container, Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
+import { Container, Card, CardActionArea, CardContent, Typography, Box, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
@@ -41,7 +41,7 @@ const ALGORITHMS = [
                 id: 'linearSearch',
                 title: 'Linear Search',
                 description: 'Sequentially checks each element of the list matches the target value.',
-                icon: <BarChartIcon fontSize="large" sx={{ color: '#00e676' }} /> // Reusing icon for now or use SearchIcon
+                icon: <BarChartIcon fontSize="large" sx={{ color: '#00e676' }} /> 
             },
             {
                 id: 'binarySearch',
@@ -72,9 +72,9 @@ export default function HomePage() {
                     <Typography variant="h4" gutterBottom sx={{ mb: 3, pl: 2, borderLeft: '4px solid', borderColor: 'primary.main' }}>
                         {category.category}
                     </Typography>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-start' }}>
+                    <Grid container spacing={4}>
                         {category.items.map((algo) => (
-                            <Box key={algo.id} sx={{ flex: '1 1 300px', maxWidth: '400px' }}>
+                            <Grid key={algo.id} size={{ xs: 12, sm: 6, md: 4 }}>
                                 <Card 
                                     elevation={0}
                                     sx={{ 
@@ -103,17 +103,17 @@ export default function HomePage() {
                                         </CardContent>
                                     </CardActionArea>
                                 </Card>
-                            </Box>
+                            </Grid>
                         ))}
-                    </Box>
+                    </Grid>
                 </Box>
             ))}
               <Box sx={{ mb: 6 }}>
             <Typography variant="h4" gutterBottom sx={{ mb: 3, pl: 2, borderLeft: '4px solid', borderColor: 'primary.main' }}>
                 Graph Algorithms
             </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-start' }}>
-                <Box sx={{ flex: '1 1 300px', maxWidth: '400px' }}>
+            <Grid container spacing={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                    <Card 
                         elevation={0}
                         sx={{ 
@@ -132,8 +132,7 @@ export default function HomePage() {
                             sx={{ height: '100%', p: 2 }}
                         >
                             <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                {/* You might want to add a specific icon for Dijkstra here */}
-                                <BoltIcon fontSize="large" sx={{ color: '#ff9100' }} /> {/* Reusing BoltIcon for now */}
+                                <BoltIcon fontSize="large" sx={{ color: '#ff9100' }} />
                                 <Typography variant="h5" component="div" fontWeight="bold">Dijkstra's Algorithm</Typography>
                                 <Typography variant="body2" color="text.secondary" align="center">
                                     Finds the shortest paths between nodes in a graph.
@@ -141,8 +140,8 @@ export default function HomePage() {
                             </CardContent>
                         </CardActionArea>
                    </Card>
-                </Box>
-            </Box>
+                </Grid>
+            </Grid>
         </Box>
     </Container>
     );
