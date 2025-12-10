@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { Container, Box, Typography, Button, TextField } from '@mui/material';
+import { Container, Box, Typography, Button, TextField, Paper, useTheme } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import ArrayVisualizer from '../components/ArrayVisualizer';
 import Controls from '../components/Controls';
@@ -16,6 +16,7 @@ const generateRandomData = (size: number = 20) =>
 export default function VisualizerPage() {
   const { type } = useParams<{ type: string }>();
   const navigate = useNavigate();
+  const theme = useTheme();
   const currentAlgo = type || 'bubbleSort';
   
   const [algoState, setAlgoState] = useState<AlgorithmState | null>(null);
@@ -199,26 +200,50 @@ export default function VisualizerPage() {
                 <CodeViewer currentLine={currentStep?.line} algorithm={currentAlgo} />
                 
                 {/* Stats Placeholder */}
-                 <Box sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 2 }}>
-                    <Typography variant="h6" color="primary">Complexity</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Time: {currentAlgo === 'binarySearch' ? 'O(log N)' : currentAlgo === 'linearSearch' ? 'O(N)' : currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : 'O(N²)'}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                         Space: {currentAlgo === 'mergeSort' ? 'O(N)' : currentAlgo === 'quickSort' || currentAlgo === 'binarySearch' ? 'O(log N)' : 'O(1)'}
-                    </Typography>
+                
+                {/* Stats & Complexity Card */}
+                 <Paper 
+                    elevation={3} 
+                    sx={{ 
+                        p: 2, 
+                        bgcolor: 'rgba(0, 0, 0, 0.6)', 
+                        borderRadius: 2,
+                        border: `1px solid ${theme.palette.primary.main}`,
+                        boxShadow: `0 0 15px ${theme.palette.primary.main}40`,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2
+                    }}
+                >
+                    <Box>
+                        <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main, textShadow: `0 0 5px ${theme.palette.primary.main}` }}>
+                            Complexity
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
+                            Time: {currentAlgo === 'binarySearch' ? 'O(log N)' : currentAlgo === 'linearSearch' ? 'O(N)' : currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : 'O(N²)'}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
+                             Space: {currentAlgo === 'mergeSort' ? 'O(N)' : currentAlgo === 'quickSort' || currentAlgo === 'binarySearch' ? 'O(log N)' : 'O(1)'}
+                        </Typography>
+                    </Box>
                     
-                    <Typography variant="h6" color="primary" sx={{ mt: 2 }}>Stats</Typography>
-                    <Typography variant="body2">Comparisons: {
-                       algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === 'compare').length
-                    }</Typography>
-                     {currentAlgo !== 'linearSearch' && currentAlgo !== 'binarySearch' && (
-                         <Typography variant="body2">
-                             {currentAlgo === 'mergeSort' ? 'Overwrites' : 'Swaps'}: {
-                            algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === (currentAlgo === 'mergeSort' ? 'overwrite' : 'swap')).length
-                        }</Typography>
-                     )}
-                </Box>
+                    <Box>
+                        <Typography variant="h6" gutterBottom sx={{ color: theme.palette.primary.main, textShadow: `0 0 5px ${theme.palette.primary.main}` }}>
+                            Stats
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Comparisons: {
+                               algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === 'compare').length
+                            }
+                        </Typography>
+                        {currentAlgo !== 'linearSearch' && currentAlgo !== 'binarySearch' && (
+                             <Typography variant="body2" color="text.secondary">
+                                 {currentAlgo === 'mergeSort' ? 'Overwrites' : 'Swaps'}: {
+                                algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === (currentAlgo === 'mergeSort' ? 'overwrite' : 'swap')).length
+                            }</Typography>
+                         )}
+                    </Box>
+                </Paper>
             </Box>
         </Box>
       </Box>
