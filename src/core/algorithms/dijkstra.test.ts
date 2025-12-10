@@ -54,14 +54,14 @@ describe('dijkstra algorithm', () => {
             steps.push(step);
         }
         
-        const visitSteps = steps.filter(s => s.type === 'visit');
+        // const visitSteps = steps.filter(s => s.type === 'visit');
         // Should visit 0 then 2 and satisfy.
         // Depending on implementation loop break:
         // Loop: pop min (0). update neighbors (1, 2).
         // Loop: pop min (2). Check if target? Yes break.
         // So visited should be [0, 2] (or just 0 if check is at neighbor update, but standard is at pop)
         
-        const visitedNodes = visitSteps.map(s => s.indices[0]);
+        // const visitedNodes = visitSteps.map(s => s.indices[0]);
         // Our implementation checks `if (minNodeId === endNodeId) break;` after popping.
         // But we yield 'visit' *after* that check? No, wait.
         

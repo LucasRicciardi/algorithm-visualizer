@@ -1,4 +1,4 @@
-import { Box, Paper, useTheme } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import type { AlgorithmState } from '../types/types';
 
 interface ArrayVisualizerProps {
@@ -6,7 +6,6 @@ interface ArrayVisualizerProps {
 }
 
 export default function ArrayVisualizer({ state }: ArrayVisualizerProps) {
-  const theme = useTheme();
   const { array, history, currentStepIndex } = state;
   const currentStep = currentStepIndex >= 0 ? history[currentStepIndex] : null;
 
