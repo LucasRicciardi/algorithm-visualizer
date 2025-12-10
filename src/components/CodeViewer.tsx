@@ -1,10 +1,11 @@
-import { Paper, Typography, Box, useTheme } from '@mui/material';
+import { Box, Paper, Typography, useTheme } from '@mui/material';
 
 interface CodeViewerProps {
     currentLine?: number;
+    algorithm?: string;
 }
 
-const PSEUDOCODE = [
+const PSEUDOCODE_BUBBLE = [
     { line: 1, text: 'for i from 0 to n-1:' },
     { line: 2, text: '  swapped = false' },
     { line: 3, text: '  for j from 0 to n-i-1:' },
@@ -14,14 +15,32 @@ const PSEUDOCODE = [
     { line: 7, text: '  if not swapped: break' },
 ];
 
-export default function CodeViewer({ currentLine }: CodeViewerProps) {
-    const theme = useTheme();
+const PSEUDOCODE_MERGE = [
+    { line: 1, text: 'merge(arr, left, mid, right):' },
+    { line: 2, text: '  if leftArr[i] <= rightArr[j]:' },
+    { line: 3, text: '    arr[k] = leftArr[i]; i++' },
+    { line: 4, text: '  else: arr[k] = rightArr[j]; j++' },
+    { line: 5, text: '  while i < left: arr[k] = left[i]' }, 
+    { line: 6, text: '  while j < right: arr[k] = right[j]' },
+    // Simplified representation mappings
+];
 
+const PSEUDOCODES: Record<string, typeof PSEUDOCODE_BUBBLE> = {
+    'bubbleSort': PSEUDOCODE_BUBBLE,
+    'mergeSort': PSEUDOCODE_MERGE
+};
+
+export default function CodeViewer({ currentLine, algorithm = 'bubbleSort' }: CodeViewerProps) {
+    const theme = useTheme();
+    const code = PSEUDOCODES[algorithm] || PSEUDOCODE_BUBBLE;
+    
     return (
         <Paper elevation={3} sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 2 }}>
-            <Typography variant="h6" gutterBottom color="primary">Pseudocode</Typography>
+            <Typography variant="h6" gutterBottom color="primary">
+                {algorithm === 'mergeSort' ? 'Merge Sort' : 'Bubble Sort'} Pseudocode
+            </Typography>
             <Box component="pre" sx={{ m: 0, fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                {PSEUDOCODE.map((item) => (
+                {code.map((item) => (
                     <Box 
                         key={item.line}
                         sx={{ 

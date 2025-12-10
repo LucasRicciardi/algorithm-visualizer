@@ -38,6 +38,8 @@ export default function ArrayVisualizer({ state }: ArrayVisualizerProps) {
                     color = theme.palette.warning.main; // Yellow/Orange for compare
                 } else if (currentStep.type === 'swap') {
                     color = theme.palette.secondary.main; // Cyan for swap
+                } else if (currentStep.type === 'overwrite') {
+                    color = theme.palette.secondary.main; // Cyan/Purple for overwrite (similar to swap)
                 } else if (currentStep.type === 'sorted') {
                     color = theme.palette.success.main; // Green for sorted
                 }

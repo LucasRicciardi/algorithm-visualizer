@@ -1,5 +1,8 @@
 import type { AlgorithmState, AlgorithmStep } from '../types/types';
 import { bubbleSort } from './algorithms/bubbleSort';
+import { mergeSort } from './algorithms/mergeSort';
+
+type AlgorithmType = 'bubbleSort' | 'mergeSort';
 
 export class AlgorithmController {
   private initialArray: number[];
@@ -9,6 +12,7 @@ export class AlgorithmController {
   private speed: number = 1000;
   private timerId: ReturnType<typeof setInterval> | null = null;
   private onStateChange: (state: AlgorithmState) => void;
+  private currentAlgorithm: AlgorithmType = 'bubbleSort';
 
   constructor(initialArray: number[], onStateChange: (state: AlgorithmState) => void) {
     this.initialArray = [...initialArray];
@@ -17,8 +21,21 @@ export class AlgorithmController {
     this.emitState();
   }
 
+  public setAlgorithm(algo: string) {
+      if (algo === this.currentAlgorithm) return;
+      this.currentAlgorithm = algo as AlgorithmType;
+      this.reset();
+  }
+
+  public getAlgorithm(): string {
+      return this.currentAlgorithm;
+  }
+
   private generateSteps() {
-    const generator = bubbleSort(this.initialArray);
+    const generator = this.currentAlgorithm === 'mergeSort' 
+        ? mergeSort(this.initialArray) 
+        : bubbleSort(this.initialArray);
+        
     this.steps = [];
     for (const step of generator) {
       this.steps.push(step);
@@ -75,16 +92,16 @@ export class AlgorithmController {
       this.pause();
       if (newArray) {
           this.initialArray = [...newArray];
-          this.generateSteps();
       }
+      // Always regenerate steps on reset as algorithm might have changed 
+      // or array might have changed
+      this.generateSteps();
       this.currentStepIndex = -1;
       this.emitState();
   }
 
   public getCurrentState(): AlgorithmState {
       // Reconstruct array state up to currentStepIndex
-      // This is less efficient than mutating, but safer for React state (immutability).
-      // Optimization: Could store intermediate array snapshots if performance becomes issue.
       
       const currentArray = [...this.initialArray];
       for (let i = 0; i <= this.currentStepIndex; i++) {
@@ -92,6 +109,10 @@ export class AlgorithmController {
             if (step.type === 'swap') {
                 const [idx1, idx2] = step.indices;
                 [currentArray[idx1], currentArray[idx2]] = [currentArray[idx2], currentArray[idx1]];
+            } else if (step.type === 'overwrite' && step.value !== undefined) {
+                // Handle overwrite
+                const [idx] = step.indices;
+                currentArray[idx] = step.value;
             }
       }
 

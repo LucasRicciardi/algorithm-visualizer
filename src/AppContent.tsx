@@ -4,6 +4,7 @@ import ArrayVisualizer from './components/ArrayVisualizer';
 import Controls from './components/Controls';
 import CodeViewer from './components/CodeViewer';
 import InputDataDialog from './components/InputDataDialog';
+import AlgorithmSelector from './components/AlgorithmSelector';
 import { AlgorithmController } from './core/AlgorithmController';
 import type { AlgorithmState } from './types/types';
 
@@ -13,6 +14,7 @@ const generateRandomData = (size: number = 20) =>
 
 export default function AppContent() {
   const [algoState, setAlgoState] = useState<AlgorithmState | null>(null);
+  const [currentAlgo, setCurrentAlgo] = useState('bubbleSort');
   const [isInputOpen, setIsInputOpen] = useState(false);
   const controllerRef = useRef<AlgorithmController | null>(null);
 
@@ -41,6 +43,11 @@ export default function AppContent() {
       controllerRef.current?.reset(data);
   };
 
+  const handleAlgoChange = (algo: string) => {
+      setCurrentAlgo(algo);
+      controllerRef.current?.setAlgorithm(algo);
+  };
+
   if (!algoState) return <Box>Loading...</Box>;
 
   const currentStep = algoState.currentStepIndex >= 0 ? algoState.history[algoState.currentStepIndex] : null;
@@ -49,9 +56,12 @@ export default function AppContent() {
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
       <AppBar position="static" color="transparent" elevation={0} sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700, color: 'primary.main' }}>
-            Algorithm Visualizer
-          </Typography>
+            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 3 }}>
+                <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                    Algorithm Visualizer
+                </Typography>
+                <AlgorithmSelector value={currentAlgo} onChange={handleAlgoChange} disabled={algoState.isPlaying} />
+            </Box>
           <Button variant="outlined" color="primary" onClick={() => setIsInputOpen(true)}>
               Custom Input
           </Button>
@@ -60,14 +70,15 @@ export default function AppContent() {
       
       <Container maxWidth="xl" sx={{ mt: 4, mb: 4, flex: 1 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        {/* ... existing layout ... */}
             {/* Header */}
             <Box>
                  <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                  Bubble Sort
+                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : 'Bubble Sort'}
                 </Typography>
                 <Typography variant="body1" color="text.secondary" paragraph>
-                    Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.
+                    {currentAlgo === 'mergeSort' 
+                        ? "Merge Sort is a divide-and-conquer algorithm that divides the input array into two halves, calls itself for the two halves, and then merges the two sorted halves." 
+                        : "Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order."}
                 </Typography>
             </Box>
 
@@ -98,20 +109,25 @@ export default function AppContent() {
 
                 {/* Right Column: Code & Stats */}
                 <Box sx={{ flex: { lg: 1 }, display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
-                    <CodeViewer currentLine={currentStep?.line} />
+                    <CodeViewer currentLine={currentStep?.line} algorithm={currentAlgo} />
                     
                     {/* Stats Placeholder */}
                      <Box sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 2 }}>
                         <Typography variant="h6" color="primary">Complexity</Typography>
-                        <Typography variant="body2" color="text.secondary">Time: O(N²)</Typography>
-                        <Typography variant="body2" color="text.secondary">Space: O(1)</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Time: {currentAlgo === 'mergeSort' ? 'O(N log N)' : 'O(N²)'}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                             Space: {currentAlgo === 'mergeSort' ? 'O(N)' : 'O(1)'}
+                        </Typography>
                         
                         <Typography variant="h6" color="primary" sx={{ mt: 2 }}>Stats</Typography>
                         <Typography variant="body2">Comparisons: {
                            algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === 'compare').length
                         }</Typography>
-                         <Typography variant="body2">Swaps: {
-                           algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === 'swap').length
+                         <Typography variant="body2">
+                             {currentAlgo === 'mergeSort' ? 'Overwrites' : 'Swaps'}: {
+                            algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === (currentAlgo === 'mergeSort' ? 'overwrite' : 'swap')).length
                         }</Typography>
                     </Box>
                 </Box>
