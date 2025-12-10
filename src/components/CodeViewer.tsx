@@ -1,0 +1,42 @@
+import { Paper, Typography, Box, useTheme } from '@mui/material';
+
+interface CodeViewerProps {
+    currentLine?: number;
+}
+
+const PSEUDOCODE = [
+    { line: 1, text: 'for i from 0 to n-1:' },
+    { line: 2, text: '  swapped = false' },
+    { line: 3, text: '  for j from 0 to n-i-1:' },
+    { line: 4, text: '    if array[j] > array[j+1]:' },
+    { line: 5, text: '      swap(array[j], array[j+1])' },
+    { line: 6, text: '      swapped = true' },
+    { line: 7, text: '  if not swapped: break' },
+];
+
+export default function CodeViewer({ currentLine }: CodeViewerProps) {
+    const theme = useTheme();
+
+    return (
+        <Paper elevation={3} sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 2 }}>
+            <Typography variant="h6" gutterBottom color="primary">Pseudocode</Typography>
+            <Box component="pre" sx={{ m: 0, fontFamily: 'monospace', fontSize: '0.9rem' }}>
+                {PSEUDOCODE.map((item) => (
+                    <Box 
+                        key={item.line}
+                        sx={{ 
+                            p: 0.5, 
+                            borderRadius: 1,
+                            bgcolor: currentLine === item.line ? 'rgba(124, 77, 255, 0.2)' : 'transparent',
+                            color: currentLine === item.line ? theme.palette.primary.light : 'text.secondary',
+                            borderLeft: currentLine === item.line ? `4px solid ${theme.palette.primary.main}` : '4px solid transparent',
+                            pl: 2
+                        }}
+                    >
+                        {item.text}
+                    </Box>
+                ))}
+            </Box>
+        </Paper>
+    );
+}
