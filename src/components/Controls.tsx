@@ -102,29 +102,18 @@ export default function Controls({
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>Slow</Typography>
             <Slider 
                 size="small"
-                value={speed}
+                // Invert logic: 
+                // Slider Left (Min) = Slow (High Delay)
+                // Slider Right (Max) = Fast (Low Delay)
+                // Range: 100 to 2000.
+                // If speed is 2000 (Slow), value should be 100.
+                // If speed is 100 (Fast), value should be 2000.
+                // transform: value = 2100 - speed
+                value={2100 - speed} 
                 min={100}
                 max={2000}
                 step={100}
-                // High value = Slow speed (high delay)
-                // Low value = Fast speed (low delay)
-                // We want Left = Fast (Low Delay)? No usually Left=Slow
-                // Standard: Left = Min Value, Right = Max Value.
-                // If Min=100 (Fast), Max=2000 (Slow). Left is Fast.
-                // If we want Left=Slow, we need Min=2000, Max=100.
-                // Slider supports min > max? No.
-                // We need scale transform if we want logic inversion.
-                // But let's stick to "Value is Delay".
-                // Left (Small Delay - Fast) -> Right (Large Delay - Slow).
-                // So Label Left should be Fast, Right should be Slow.
-                // Wait, previous code had "Slow" on Left?
-                // Let's make it intuitive: Left = Slow, Right = Fast.
-                // This means Value should go from High Delay to Low Delay.
-                // scale(x) -> inverse.
-                // Simpler: Just swap labels if using natural delay values?
-                // Left (100ms - Fast). Right (2000ms - Slow).
-                // I will label Left as "Fast" and Right as "Slow".
-                onChange={(_, val) => onSpeedChange(val as number)}
+                onChange={(_, val) => onSpeedChange(2100 - (val as number))}
                 sx={{
                     '& .MuiSlider-thumb': {
                         boxShadow: '0 0 10px #00E5FF'
