@@ -37,11 +37,15 @@ export default function ArrayVisualizer({ state }: ArrayVisualizerProps) {
                 if (currentStep.type === 'compare') {
                     color = theme.palette.warning.main; // Yellow/Orange for compare
                 } else if (currentStep.type === 'swap') {
-                    color = theme.palette.secondary.main; // Cyan for swap
-                } else if (currentStep.type === 'overwrite') {
-                    color = theme.palette.secondary.main; // Cyan/Purple for overwrite (similar to swap)
+                    color = theme.palette.error.main; // Red for swap (changed from secondary)
+                } else if (currentStep.type === 'highlight') {
+                    color = theme.palette.info.main; // Blue for highlight
                 } else if (currentStep.type === 'sorted') {
                     color = theme.palette.success.main; // Green for sorted
+                } else if (currentStep.type === 'overwrite') {
+                    color = theme.palette.secondary.main; // Cyan/Purple for overwrite
+                } else if (currentStep.type === 'found') {
+                    color = '#00e676'; // Bright green for found
                 }
             }
         }

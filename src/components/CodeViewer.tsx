@@ -39,10 +39,18 @@ const PSEUDOCODE_QUICK = [
     { line: 11, text: '  return i + 1' },
 ];
 
+const PSEUDOCODE_LINEAR = [
+    { line: 1, text: 'linearSearch(arr, target):' },
+    { line: 2, text: '  for i from 0 to n-1:' },
+    { line: 3, text: '    if arr[i] == target: return i' },
+    { line: 4, text: '  return -1' },
+];
+
 const PSEUDOCODES: Record<string, typeof PSEUDOCODE_BUBBLE> = {
     'bubbleSort': PSEUDOCODE_BUBBLE,
     'mergeSort': PSEUDOCODE_MERGE,
-    'quickSort': PSEUDOCODE_QUICK
+    'quickSort': PSEUDOCODE_QUICK,
+    'linearSearch': PSEUDOCODE_LINEAR
 };
 
 export default function CodeViewer({ currentLine, algorithm = 'bubbleSort' }: CodeViewerProps) {

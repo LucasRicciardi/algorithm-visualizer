@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { Container, Box, Typography, Button } from '@mui/material';
+import { Container, Box, Typography, Button, TextField } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import ArrayVisualizer from '../components/ArrayVisualizer';
 import Controls from '../components/Controls';
@@ -22,6 +22,8 @@ export default function VisualizerPage() {
   const [isInputOpen, setIsInputOpen] = useState(false);
   const controllerRef = useRef<AlgorithmController | null>(null);
 
+  const [targetValue, setTargetValue] = useState(42);
+
   useEffect(() => {
       // Initialize controller on mount
       const data = generateRandomData();
@@ -29,21 +31,24 @@ export default function VisualizerPage() {
           setAlgoState(newState);
       });
       
-      // Set initial algorithm based on URL
+      // Set initial algorithm and target based on URL
       controllerRef.current.setAlgorithm(currentAlgo);
+      controllerRef.current.setTarget(targetValue);
       
       return () => {
           if (controllerRef.current) {
               controllerRef.current.pause();
           }
       }
-      // We only want to run this once on mount, or if we want to reset on param change?
-      // If param changes, we should update algorithm.
   }, []);
 
   useEffect(() => {
       if (controllerRef.current && currentAlgo) {
           controllerRef.current.setAlgorithm(currentAlgo);
+          // If switching to search, make sure target is set
+          if (currentAlgo === 'linearSearch') {
+              controllerRef.current.setTarget(targetValue);
+          }
       }
   }, [currentAlgo]);
 
@@ -56,6 +61,14 @@ export default function VisualizerPage() {
   
   const handleCustomInput = (data: number[]) => {
       controllerRef.current?.reset(data);
+  };
+
+  const handleTargetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const val = parseInt(e.target.value);
+      if (!isNaN(val)) {
+          setTargetValue(val);
+          controllerRef.current?.setTarget(val);
+      }
   };
 
   const handleAlgoChange = (algo: string) => {
@@ -73,18 +86,31 @@ export default function VisualizerPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
              <Box>
                  <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : currentAlgo === 'quickSort' ? 'Quick Sort' : 'Bubble Sort'}
+                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : currentAlgo === 'quickSort' ? 'Quick Sort' : currentAlgo === 'linearSearch' ? 'Linear Search' : 'Bubble Sort'}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                     {currentAlgo === 'mergeSort' 
                         ? "Merge Sort is a divide-and-conquer algorithm that divides the input array into two halves, calls itself for the two halves, and then merges the two sorted halves."
                         : currentAlgo === 'quickSort'
                         ? "Quick Sort is a highly efficient sorting algorithm and is based on partitioning of array of data into smaller arrays."
+                        : currentAlgo === 'linearSearch'
+                        ? "Linear Search sequentially checks each element of the list until a match is found or the whole list has been searched."
                         : "Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order."}
                 </Typography>
              </Box>
              
              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                 {currentAlgo === 'linearSearch' && (
+                     <TextField 
+                         label="Target" 
+                         type="number" 
+                         size="small" 
+                         value={targetValue} 
+                         onChange={handleTargetChange}
+                         sx={{ width: 100 }}
+                         disabled={algoState.isPlaying}
+                     />
+                 )}
                  <AlgorithmSelector value={currentAlgo} onChange={handleAlgoChange} disabled={algoState.isPlaying} />
                  <Button variant="outlined" color="primary" onClick={() => setIsInputOpen(true)}>
                   Custom Input
@@ -125,7 +151,7 @@ export default function VisualizerPage() {
                  <Box sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 2 }}>
                     <Typography variant="h6" color="primary">Complexity</Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Time: {currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : 'O(N²)'}
+                        Time: {currentAlgo === 'linearSearch' ? 'O(N)' : currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : 'O(N²)'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                          Space: {currentAlgo === 'mergeSort' ? 'O(N)' : currentAlgo === 'quickSort' ? 'O(log N)' : 'O(1)'}
@@ -135,10 +161,12 @@ export default function VisualizerPage() {
                     <Typography variant="body2">Comparisons: {
                        algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === 'compare').length
                     }</Typography>
-                     <Typography variant="body2">
-                         {currentAlgo === 'mergeSort' ? 'Overwrites' : 'Swaps'}: {
-                        algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === (currentAlgo === 'mergeSort' ? 'overwrite' : 'swap')).length
-                    }</Typography>
+                     {currentAlgo !== 'linearSearch' && (
+                         <Typography variant="body2">
+                             {currentAlgo === 'mergeSort' ? 'Overwrites' : 'Swaps'}: {
+                            algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === (currentAlgo === 'mergeSort' ? 'overwrite' : 'swap')).length
+                        }</Typography>
+                     )}
                 </Box>
             </Box>
         </Box>

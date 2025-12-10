@@ -1,4 +1,4 @@
-import { FormControl, Select, MenuItem, Box } from '@mui/material';
+import { FormControl, Select, MenuItem, Box, ListSubheader } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material';
 
 interface AlgorithmSelectorProps {
@@ -26,9 +26,12 @@ export default function AlgorithmSelector({ value, onChange, disabled }: Algorit
                         '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' }
                     }}
                 >
+                    <ListSubheader>Sorting</ListSubheader>
                     <MenuItem value="bubbleSort">Bubble Sort</MenuItem>
                     <MenuItem value="mergeSort">Merge Sort</MenuItem>
                     <MenuItem value="quickSort">Quick Sort</MenuItem>
+                    <ListSubheader>Searching</ListSubheader>
+                    <MenuItem value="linearSearch">Linear Search</MenuItem>
                 </Select>
             </FormControl>
         </Box>

@@ -6,22 +6,38 @@ import BoltIcon from '@mui/icons-material/Bolt';
 
 const ALGORITHMS = [
     {
-        id: 'bubbleSort',
-        title: 'Bubble Sort',
-        description: 'A simple comparison-based sorting algorithm.',
-        icon: <BarChartIcon fontSize="large" color="primary" />
+        category: 'Sorting',
+        items: [
+            {
+                id: 'bubbleSort',
+                title: 'Bubble Sort',
+                description: 'A simple comparison-based sorting algorithm.',
+                icon: <BarChartIcon fontSize="large" color="primary" />
+            },
+            {
+                id: 'mergeSort',
+                title: 'Merge Sort',
+                description: 'A divide-and-conquer sorting algorithm.',
+                icon: <CallSplitIcon fontSize="large" color="secondary" />
+            },
+            {
+                id: 'quickSort',
+                title: 'Quick Sort',
+                description: 'An efficient, divide-and-conquer sorting algorithm.',
+                icon: <BoltIcon fontSize="large" sx={{ color: '#ff9100' }} />
+            }
+        ]
     },
     {
-        id: 'mergeSort',
-        title: 'Merge Sort',
-        description: 'A divide-and-conquer sorting algorithm.',
-        icon: <CallSplitIcon fontSize="large" color="secondary" />
-    },
-    {
-        id: 'quickSort',
-        title: 'Quick Sort',
-        description: 'An efficient, divide-and-conquer sorting algorithm.',
-        icon: <BoltIcon fontSize="large" sx={{ color: '#ff9100' }} />
+        category: 'Searching',
+        items: [
+             {
+                id: 'linearSearch',
+                title: 'Linear Search',
+                description: 'Sequentially checks each element of the list matches the target value.',
+                icon: <BarChartIcon fontSize="large" sx={{ color: '#00e676' }} /> // Reusing icon for now or use SearchIcon
+            }
+        ]
     }
 ];
 
@@ -39,40 +55,47 @@ export default function HomePage() {
                 </Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'center' }}>
-                {ALGORITHMS.map((algo) => (
-                    <Box key={algo.id} sx={{ flex: '1 1 300px', maxWidth: '400px' }}>
-                        <Card 
-                            elevation={0}
-                            sx={{ 
-                                height: '100%', 
-                                border: '1px solid rgba(255,255,255,0.1)',
-                                transition: 'transform 0.2s, box-shadow 0.2s',
-                                '&:hover': {
-                                    transform: 'translateY(-4px)',
-                                    boxShadow: (theme) => `0 8px 24px ${theme.palette.primary.main}40`,
-                                    borderColor: 'primary.main'
-                                }
-                            }}
-                        >
-                            <CardActionArea 
-                                onClick={() => navigate(`/algorithm/${algo.id}`)}
-                                sx={{ height: '100%', p: 2 }}
-                            >
-                                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                    {algo.icon}
-                                    <Typography variant="h5" component="div" fontWeight="bold">
-                                        {algo.title}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary" align="center">
-                                        {algo.description}
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
+            {ALGORITHMS.map((category) => (
+                <Box key={category.category} sx={{ mb: 6 }}>
+                    <Typography variant="h4" gutterBottom sx={{ mb: 3, pl: 2, borderLeft: '4px solid', borderColor: 'primary.main' }}>
+                        {category.category}
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-start' }}>
+                        {category.items.map((algo) => (
+                            <Box key={algo.id} sx={{ flex: '1 1 300px', maxWidth: '400px' }}>
+                                <Card 
+                                    elevation={0}
+                                    sx={{ 
+                                        height: '100%', 
+                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        transition: 'transform 0.2s, box-shadow 0.2s',
+                                        '&:hover': {
+                                            transform: 'translateY(-4px)',
+                                            boxShadow: (theme) => `0 8px 24px ${theme.palette.primary.main}40`,
+                                            borderColor: 'primary.main'
+                                        }
+                                    }}
+                                >
+                                    <CardActionArea 
+                                        onClick={() => navigate(`/algorithm/${algo.id}`)}
+                                        sx={{ height: '100%', p: 2 }}
+                                    >
+                                        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                            {algo.icon}
+                                            <Typography variant="h5" component="div" fontWeight="bold">
+                                                {algo.title}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary" align="center">
+                                                {algo.description}
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Box>
+                        ))}
                     </Box>
-                ))}
-            </Box>
+                </Box>
+            ))}
         </Container>
     );
 }

@@ -2,8 +2,9 @@ import type { AlgorithmState, AlgorithmStep } from '../types/types';
 import { bubbleSort } from './algorithms/bubbleSort';
 import { mergeSort } from './algorithms/mergeSort';
 import { quickSort } from './algorithms/quickSort';
+import { linearSearch } from './algorithms/linearSearch';
 
-type AlgorithmType = 'bubbleSort' | 'mergeSort' | 'quickSort';
+type AlgorithmType = 'bubbleSort' | 'mergeSort' | 'quickSort' | 'linearSearch';
 
 export class AlgorithmController {
   private initialArray: number[];
@@ -14,6 +15,7 @@ export class AlgorithmController {
   private timerId: ReturnType<typeof setInterval> | null = null;
   private onStateChange: (state: AlgorithmState) => void;
   private currentAlgorithm: AlgorithmType = 'bubbleSort';
+  private targetValue: number = 0; // Default target
 
   constructor(initialArray: number[], onStateChange: (state: AlgorithmState) => void) {
     this.initialArray = [...initialArray];
@@ -26,6 +28,15 @@ export class AlgorithmController {
       if (algo === this.currentAlgorithm) return;
       this.currentAlgorithm = algo as AlgorithmType;
       this.reset();
+  }
+  
+  public setTarget(target: number) {
+      if (this.targetValue === target) return;
+      this.targetValue = target;
+      // Only reset steps if current algorithm is a search algorithm
+      if (this.currentAlgorithm === 'linearSearch') {
+          this.reset(); // This will regenerate steps with new target
+      }
   }
 
   public getAlgorithm(): string {
@@ -40,6 +51,9 @@ export class AlgorithmController {
             break;
         case 'quickSort':
             generator = quickSort(this.initialArray);
+            break;
+        case 'linearSearch':
+            generator = linearSearch(this.initialArray, this.targetValue);
             break;
         case 'bubbleSort':
         default:
@@ -125,6 +139,7 @@ export class AlgorithmController {
                 const [idx] = step.indices;
                 currentArray[idx] = step.value;
             }
+            // 'compare', 'highlight', 'found' don't modify array structure/values usually
       }
 
       return {

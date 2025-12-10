@@ -1,4 +1,4 @@
-export type AlgorithmStepType = 'compare' | 'swap' | 'highlight' | 'sorted' | 'overwrite';
+export type AlgorithmStepType = 'compare' | 'swap' | 'highlight' | 'sorted' | 'overwrite' | 'found';
 
 export interface AlgorithmStep {
   type: AlgorithmStepType;
