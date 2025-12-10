@@ -3,8 +3,9 @@ import { bubbleSort } from './algorithms/bubbleSort';
 import { mergeSort } from './algorithms/mergeSort';
 import { quickSort } from './algorithms/quickSort';
 import { linearSearch } from './algorithms/linearSearch';
+import { binarySearch } from './algorithms/binarySearch';
 
-type AlgorithmType = 'bubbleSort' | 'mergeSort' | 'quickSort' | 'linearSearch';
+type AlgorithmType = 'bubbleSort' | 'mergeSort' | 'quickSort' | 'linearSearch' | 'binarySearch';
 
 export class AlgorithmController {
   private initialArray: number[];
@@ -34,7 +35,7 @@ export class AlgorithmController {
       if (this.targetValue === target) return;
       this.targetValue = target;
       // Only reset steps if current algorithm is a search algorithm
-      if (this.currentAlgorithm === 'linearSearch') {
+      if (this.currentAlgorithm === 'linearSearch' || this.currentAlgorithm === 'binarySearch') {
           this.reset(); // This will regenerate steps with new target
       }
   }
@@ -54,6 +55,9 @@ export class AlgorithmController {
             break;
         case 'linearSearch':
             generator = linearSearch(this.initialArray, this.targetValue);
+            break;
+        case 'binarySearch':
+            generator = binarySearch(this.initialArray, this.targetValue);
             break;
         case 'bubbleSort':
         default:

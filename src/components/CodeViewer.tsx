@@ -46,11 +46,23 @@ const PSEUDOCODE_LINEAR = [
     { line: 4, text: '  return -1' },
 ];
 
+const PSEUDOCODE_BINARY = [
+    { line: 1, text: 'binarySearch(arr, target):' },
+    { line: 2, text: '  low = 0, high = arr.length - 1' },
+    { line: 3, text: '  while low <= high:' },
+    { line: 4, text: '    mid = floor((low + high) / 2)' },
+    { line: 5, text: '    if arr[mid] == target: return mid' },
+    { line: 6, text: '    else if arr[mid] < target: low = mid + 1' },
+    { line: 7, text: '    else: high = mid - 1' },
+    { line: 8, text: '  return -1' },
+];
+
 const PSEUDOCODES: Record<string, typeof PSEUDOCODE_BUBBLE> = {
     'bubbleSort': PSEUDOCODE_BUBBLE,
     'mergeSort': PSEUDOCODE_MERGE,
     'quickSort': PSEUDOCODE_QUICK,
-    'linearSearch': PSEUDOCODE_LINEAR
+    'linearSearch': PSEUDOCODE_LINEAR,
+    'binarySearch': PSEUDOCODE_BINARY
 };
 
 export default function CodeViewer({ currentLine, algorithm = 'bubbleSort' }: CodeViewerProps) {

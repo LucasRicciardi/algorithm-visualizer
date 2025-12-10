@@ -33,6 +33,13 @@ export default function VisualizerPage() {
       
       // Set initial algorithm and target based on URL
       controllerRef.current.setAlgorithm(currentAlgo);
+      
+      // If binary search, ensure initial data is sorted
+      if (currentAlgo === 'binarySearch') {
+          const sortedData = [...data].sort((a, b) => a - b);
+          controllerRef.current.reset(sortedData);
+      }
+      
       controllerRef.current.setTarget(targetValue);
       
       return () => {
@@ -46,8 +53,16 @@ export default function VisualizerPage() {
       if (controllerRef.current && currentAlgo) {
           controllerRef.current.setAlgorithm(currentAlgo);
           // If switching to search, make sure target is set
-          if (currentAlgo === 'linearSearch') {
+          if (currentAlgo === 'linearSearch' || currentAlgo === 'binarySearch') {
               controllerRef.current.setTarget(targetValue);
+          }
+          
+          // If switching to binary search, sort the current data
+          if (currentAlgo === 'binarySearch') {
+              // Better to just generate new random sorted data to be clean
+               const newData = generateRandomData();
+               newData.sort((a, b) => a - b);
+               controllerRef.current.reset(newData);
           }
       }
   }, [currentAlgo]);
@@ -59,23 +74,41 @@ export default function VisualizerPage() {
   const handleReset = () => {
       const newData = generateRandomData();
       controllerRef.current?.reset(newData);
-      // Also randomize target for linear search
-      if (currentAlgo === 'linearSearch') {
+      // Also randomize target for linear search or binary search
+      if (currentAlgo === 'linearSearch' || currentAlgo === 'binarySearch') {
           // 50% chance to pick a value from array, 50% random
           const shouldExist = Math.random() > 0.5;
           let newTarget;
-          if (shouldExist && newData.length > 0) {
-               newTarget = newData[Math.floor(Math.random() * newData.length)];
+          
+          // For Binary Search, data MUST be sorted.
+          // However, reset(newData) sets the array.
+          // If we are in binary search, we should sort newData before setting it.
+          let finalData = [...newData];
+          if (currentAlgo === 'binarySearch') {
+              finalData.sort((a, b) => a - b);
+              controllerRef.current?.reset(finalData);
+          } else {
+              controllerRef.current?.reset(newData);
+          }
+
+          if (shouldExist && finalData.length > 0) {
+               newTarget = finalData[Math.floor(Math.random() * finalData.length)];
           } else {
                newTarget = Math.floor(Math.random() * 90) + 10;
           }
           setTargetValue(newTarget);
           controllerRef.current?.setTarget(newTarget);
+      } else {
+           controllerRef.current?.reset(newData);
       }
   };
   const handleSpeedChange = (speed: number) => controllerRef.current?.setSpeed(speed);
   
   const handleCustomInput = (data: number[]) => {
+      // If binary search, sort the custom input
+      if (currentAlgo === 'binarySearch') {
+          data.sort((a, b) => a - b);
+      }
       controllerRef.current?.reset(data);
   };
 
@@ -102,7 +135,7 @@ export default function VisualizerPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
              <Box>
                  <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : currentAlgo === 'quickSort' ? 'Quick Sort' : currentAlgo === 'linearSearch' ? 'Linear Search' : 'Bubble Sort'}
+                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : currentAlgo === 'quickSort' ? 'Quick Sort' : currentAlgo === 'linearSearch' ? 'Linear Search' : currentAlgo === 'binarySearch' ? 'Binary Search' : 'Bubble Sort'}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                     {currentAlgo === 'mergeSort' 
@@ -111,12 +144,14 @@ export default function VisualizerPage() {
                         ? "Quick Sort is a highly efficient sorting algorithm and is based on partitioning of array of data into smaller arrays."
                         : currentAlgo === 'linearSearch'
                         ? "Linear Search sequentially checks each element of the list until a match is found or the whole list has been searched."
+                        : currentAlgo === 'binarySearch'
+                        ? "Binary Search compares the target value to the middle element of the array. If they are not equal, the half in which the target cannot lie is eliminated."
                         : "Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order."}
                 </Typography>
              </Box>
              
              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                 {currentAlgo === 'linearSearch' && (
+                 {(currentAlgo === 'linearSearch' || currentAlgo === 'binarySearch') && (
                      <TextField 
                          label="Target" 
                          type="number" 
@@ -167,17 +202,17 @@ export default function VisualizerPage() {
                  <Box sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 2 }}>
                     <Typography variant="h6" color="primary">Complexity</Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Time: {currentAlgo === 'linearSearch' ? 'O(N)' : currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : 'O(N²)'}
+                        Time: {currentAlgo === 'binarySearch' ? 'O(log N)' : currentAlgo === 'linearSearch' ? 'O(N)' : currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : 'O(N²)'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                         Space: {currentAlgo === 'mergeSort' ? 'O(N)' : currentAlgo === 'quickSort' ? 'O(log N)' : 'O(1)'}
+                         Space: {currentAlgo === 'mergeSort' ? 'O(N)' : currentAlgo === 'quickSort' || currentAlgo === 'binarySearch' ? 'O(log N)' : 'O(1)'}
                     </Typography>
                     
                     <Typography variant="h6" color="primary" sx={{ mt: 2 }}>Stats</Typography>
                     <Typography variant="body2">Comparisons: {
                        algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === 'compare').length
                     }</Typography>
-                     {currentAlgo !== 'linearSearch' && (
+                     {currentAlgo !== 'linearSearch' && currentAlgo !== 'binarySearch' && (
                          <Typography variant="body2">
                              {currentAlgo === 'mergeSort' ? 'Overwrites' : 'Swaps'}: {
                             algoState.history.slice(0, algoState.currentStepIndex + 1).filter(s => s.type === (currentAlgo === 'mergeSort' ? 'overwrite' : 'swap')).length

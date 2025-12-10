@@ -36,6 +36,12 @@ const ALGORITHMS = [
                 title: 'Linear Search',
                 description: 'Sequentially checks each element of the list matches the target value.',
                 icon: <BarChartIcon fontSize="large" sx={{ color: '#00e676' }} /> // Reusing icon for now or use SearchIcon
+            },
+            {
+                id: 'binarySearch',
+                title: 'Binary Search',
+                description: 'Efficiently finds a target in a sorted array by repeated halving.',
+                icon: <CallSplitIcon fontSize="large" sx={{ color: '#2979ff' }} />
             }
         ]
     }
