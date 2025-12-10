@@ -3,10 +3,11 @@ export type AlgorithmStepType = 'compare' | 'swap' | 'highlight' | 'sorted' | 'o
 export interface AlgorithmStep {
   type: AlgorithmStepType;
   indices: number[]; // Indices of elements involved (or Node IDs for graph)
+  value?: number;
   description: string;
-  line?: number; // Line number in pseudocode
-  value?: number; // For overwrite operations or current distance/weight
-  edge?: { source: number, target: number }; // For graph edges
+  line?: number;
+  edge?: { source: number, target: number };
+  path?: number[]; // Sequence of node IDs representing the current path
 }
 
 export interface GraphNode {
@@ -27,13 +28,15 @@ export interface GraphData {
 }
 
 export interface AlgorithmState {
-  array: number[];
-  graph?: GraphData;
-  history: AlgorithmStep[];
-  currentStepIndex: number;
-  isPlaying: boolean;
-  speed: number;
-  isFinished: boolean;
+    array: number[];
+    graph?: GraphData;
+    history: AlgorithmStep[];
+    currentStepIndex: number;
+    isPlaying: boolean;
+    speed: number;
+    isFinished: boolean;
+    startNode?: number;
+    endNode?: number;
 }
 
 export interface VizCommand {

@@ -217,7 +217,9 @@ export class AlgorithmController {
           currentStepIndex: this.currentStepIndex,
           isPlaying: this.isPlaying,
           speed: this.speed,
-          isFinished: this.currentStepIndex === this.steps.length - 1
+          isFinished: this.currentStepIndex === this.steps.length - 1,
+          startNode: this.currentAlgorithm === 'dijkstra' ? this.startNode : undefined,
+          endNode: this.currentAlgorithm === 'dijkstra' ? this.endNode : undefined
       };
   }
 

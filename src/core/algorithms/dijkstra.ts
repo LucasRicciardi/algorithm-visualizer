@@ -34,14 +34,24 @@ export function* dijkstra(graph: GraphData, startNodeId: number, endNodeId: numb
         
         // If no reachable nodes left (or target found logic could go here)
         if (minNodeId === null || minDistance === Infinity) break;
-        if (endNodeId !== -1 && minNodeId === endNodeId) break; // Found target
-        
         unvisited.delete(minNodeId);
+
+        // Reconstruct current path from start to minNodeId
+        const currentPath: number[] = [];
+        let curr: number | null = minNodeId;
+        // Safety check loop limit to prevent infinite loop in case of errors, though shouldn't happen with correct logic
+        let loopLimit = 0; 
+        while (curr !== null && loopLimit < nodes.length) {
+            currentPath.unshift(curr);
+            curr = previous[curr];
+            loopLimit++;
+        }
         
         yield {
             type: 'visit',
             indices: [minNodeId],
-            description: `Visit node ${minNodeId} with current shortest distance ${Math.floor(minDistance)}.`
+            path: currentPath,
+            description: `Visit node ${minNodeId} with current distance ${Math.floor(minDistance)}.`
         };
         
         // Get neighbors
