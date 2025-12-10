@@ -50,6 +50,12 @@ export default function InputDataDialog({ open, onClose, onSubmit }: InputDataDi
         setText(''); // Optional: clear or keep
     };
 
+    const handleRandomize = () => {
+        const randomData = Array.from({ length: 20 }, () => Math.floor(Math.random() * 90) + 10);
+        setText(randomData.join(', '));
+        setError(null);
+    };
+
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle>Custom Input Data</DialogTitle>
@@ -77,6 +83,7 @@ export default function InputDataDialog({ open, onClose, onSubmit }: InputDataDi
                 {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
             </DialogContent>
             <DialogActions>
+                <Button onClick={handleRandomize} color="secondary">Randomize</Button>
                 <Button onClick={onClose}>Cancel</Button>
                 <Button onClick={handleSubmit} variant="contained">Visualize</Button>
             </DialogActions>

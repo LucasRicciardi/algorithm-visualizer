@@ -56,7 +56,23 @@ export default function VisualizerPage() {
   const handlePause = () => controllerRef.current?.pause();
   const handleNext = () => controllerRef.current?.next();
   const handlePrev = () => controllerRef.current?.prev();
-  const handleReset = () => controllerRef.current?.reset(generateRandomData());
+  const handleReset = () => {
+      const newData = generateRandomData();
+      controllerRef.current?.reset(newData);
+      // Also randomize target for linear search
+      if (currentAlgo === 'linearSearch') {
+          // 50% chance to pick a value from array, 50% random
+          const shouldExist = Math.random() > 0.5;
+          let newTarget;
+          if (shouldExist && newData.length > 0) {
+               newTarget = newData[Math.floor(Math.random() * newData.length)];
+          } else {
+               newTarget = Math.floor(Math.random() * 90) + 10;
+          }
+          setTargetValue(newTarget);
+          controllerRef.current?.setTarget(newTarget);
+      }
+  };
   const handleSpeedChange = (speed: number) => controllerRef.current?.setSpeed(speed);
   
   const handleCustomInput = (data: number[]) => {
