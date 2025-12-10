@@ -102,6 +102,42 @@ export default function HomePage() {
                     </Box>
                 </Box>
             ))}
-        </Container>
+              <Box sx={{ mb: 6 }}>
+            <Typography variant="h4" gutterBottom sx={{ mb: 3, pl: 2, borderLeft: '4px solid', borderColor: 'primary.main' }}>
+                Graph Algorithms
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-start' }}>
+                <Box sx={{ flex: '1 1 300px', maxWidth: '400px' }}>
+                   <Card 
+                        elevation={0}
+                        sx={{ 
+                            height: '100%', 
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            transition: 'transform 0.2s, box-shadow 0.2s',
+                            '&:hover': {
+                                transform: 'translateY(-4px)',
+                                boxShadow: (theme) => `0 8px 24px ${theme.palette.primary.main}40`,
+                                borderColor: 'primary.main'
+                            }
+                        }}
+                   >
+                        <CardActionArea 
+                            onClick={() => navigate('/algorithm/dijkstra')}
+                            sx={{ height: '100%', p: 2 }}
+                        >
+                            <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                {/* You might want to add a specific icon for Dijkstra here */}
+                                <BoltIcon fontSize="large" sx={{ color: '#ff9100' }} /> {/* Reusing BoltIcon for now */}
+                                <Typography variant="h5" component="div" fontWeight="bold">Dijkstra's Algorithm</Typography>
+                                <Typography variant="body2" color="text.secondary" align="center">
+                                    Finds the shortest paths between nodes in a graph.
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                   </Card>
+                </Box>
+            </Box>
+        </Box>
+    </Container>
     );
 }
