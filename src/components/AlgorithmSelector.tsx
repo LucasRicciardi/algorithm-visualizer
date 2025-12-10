@@ -30,6 +30,7 @@ export default function AlgorithmSelector({ value, onChange, disabled }: Algorit
                     <MenuItem value="bubbleSort">Bubble Sort</MenuItem>
                     <MenuItem value="mergeSort">Merge Sort</MenuItem>
                     <MenuItem value="quickSort">Quick Sort</MenuItem>
+                    <MenuItem value="heapSort">Heap Sort</MenuItem>
                     <ListSubheader disableSticky>Searching</ListSubheader>
                     <MenuItem value="linearSearch">Linear Search</MenuItem>
                     <MenuItem value="binarySearch">Binary Search</MenuItem>

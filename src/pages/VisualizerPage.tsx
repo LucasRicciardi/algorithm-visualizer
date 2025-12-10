@@ -157,13 +157,15 @@ export default function VisualizerPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
              <Box>
                  <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : currentAlgo === 'quickSort' ? 'Quick Sort' : currentAlgo === 'linearSearch' ? 'Linear Search' : currentAlgo === 'binarySearch' ? 'Binary Search' : currentAlgo === 'dijkstra' ? "Dijkstra's Algorithm" : 'Bubble Sort'}
+                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : currentAlgo === 'quickSort' ? 'Quick Sort' : currentAlgo === 'heapSort' ? 'Heap Sort' : currentAlgo === 'linearSearch' ? 'Linear Search' : currentAlgo === 'binarySearch' ? 'Binary Search' : currentAlgo === 'dijkstra' ? "Dijkstra's Algorithm" : 'Bubble Sort'}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                     {currentAlgo === 'mergeSort' 
                         ? "Merge Sort is a divide-and-conquer algorithm that divides the input array into two halves, calls itself for the two halves, and then merges the two sorted halves."
                         : currentAlgo === 'quickSort'
                         ? "Quick Sort is a highly efficient sorting algorithm and is based on partitioning of array of data into smaller arrays."
+                        : currentAlgo === 'heapSort'
+                        ? "Heap Sort is a comparison-based sorting technique based on Binary Heap data structure. It is similar to selection sort where we first find the maximum element and place the maximum element at the end."
                         : currentAlgo === 'linearSearch'
                         ? "Linear Search sequentially checks each element of the list until a match is found or the whole list has been searched."
                         : currentAlgo === 'binarySearch'
@@ -269,7 +271,7 @@ export default function VisualizerPage() {
                             Complexity
                         </Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
-                            Time: {currentAlgo === 'binarySearch' ? 'O(log N)' : currentAlgo === 'linearSearch' ? 'O(N)' : currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : currentAlgo === 'dijkstra' ? 'O(E + V log V)' : 'O(N²)'}
+                            Time: {currentAlgo === 'binarySearch' ? 'O(log N)' : currentAlgo === 'linearSearch' ? 'O(N)' : currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' || currentAlgo === 'heapSort' ? 'O(N log N)' : currentAlgo === 'dijkstra' ? 'O(E + V log V)' : 'O(N²)'}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
                              Space: {currentAlgo === 'mergeSort' ? 'O(N)' : currentAlgo === 'quickSort' || currentAlgo === 'binarySearch' ? 'O(log N)' : currentAlgo === 'dijkstra' ? 'O(V + E)' : 'O(1)'}

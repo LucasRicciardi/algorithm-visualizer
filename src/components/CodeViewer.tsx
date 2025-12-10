@@ -73,10 +73,24 @@ const PSEUDOCODE_DIJKSTRA = [
     { line: 13, text: '        dist[v] = alt' },
 ];
 
+const PSEUDOCODE_HEAP = [
+    { line: 1, text: 'heapSort(arr): buildMaxHeap(arr)' },
+    { line: 2, text: '  for i = n/2 - 1 to 0: heapify(arr, n, i)' },
+    { line: 3, text: '  for i = n - 1 to 1:' },
+    { line: 4, text: '    swap(arr[0], arr[i])' },
+    { line: 5, text: '    heapify(arr, i, 0)' },
+    { line: 6, text: 'heapify(arr, n, i):' },
+    { line: 7, text: '  largest = i; l = 2*i + 1; r = 2*i + 2' },
+    { line: 8, text: '  if l < n && arr[l] > arr[largest]: largest = l' },
+    { line: 9, text: '  if r < n && arr[r] > arr[largest]: largest = r' },
+    { line: 10, text: '  if largest != i: swap(arr[i], arr[largest]); heapify(arr, n, largest)' }
+];
+
 const PSEUDOCODES: Record<string, { line: number; text: string }[]> = {
     'bubbleSort': PSEUDOCODE_BUBBLE,
     'mergeSort': PSEUDOCODE_MERGE,
     'quickSort': PSEUDOCODE_QUICK,
+    'heapSort': PSEUDOCODE_HEAP,
     'linearSearch': PSEUDOCODE_LINEAR,
     'binarySearch': PSEUDOCODE_BINARY,
     'dijkstra': PSEUDOCODE_DIJKSTRA,
@@ -100,7 +114,7 @@ export default function CodeViewer({ currentLine, algorithm = 'bubbleSort' }: Co
             }}
         >
             <Typography variant="h6" gutterBottom sx={{ color: theme.palette.secondary.main, textShadow: `0 0 5px ${theme.palette.secondary.main}` }}>
-                {algorithm === 'mergeSort' ? 'Merge Sort' : algorithm === 'quickSort' ? 'Quick Sort' : algorithm === 'linearSearch' ? 'Linear Search' : algorithm === 'binarySearch' ? 'Binary Search' : 'Bubble Sort'} Pseudocode
+                {algorithm === 'mergeSort' ? 'Merge Sort' : algorithm === 'quickSort' ? 'Quick Sort' : algorithm === 'heapSort' ? 'Heap Sort' : algorithm === 'linearSearch' ? 'Linear Search' : algorithm === 'binarySearch' ? 'Binary Search' : 'Bubble Sort'} Pseudocode
             </Typography>
             {code.map((line) => (
                 <Box 

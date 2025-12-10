@@ -5,8 +5,9 @@ import { quickSort } from './algorithms/quickSort';
 import { linearSearch } from './algorithms/linearSearch';
 import { binarySearch } from './algorithms/binarySearch';
 import { dijkstra } from './algorithms/dijkstra';
+import { heapSort } from './algorithms/heapSort';
 
-type AlgorithmType = 'bubbleSort' | 'mergeSort' | 'quickSort' | 'linearSearch' | 'binarySearch' | 'dijkstra';
+type AlgorithmType = 'bubbleSort' | 'mergeSort' | 'quickSort' | 'heapSort' | 'linearSearch' | 'binarySearch' | 'dijkstra';
 
 export class AlgorithmController {
   private initialArray: number[];
@@ -137,6 +138,9 @@ export class AlgorithmController {
             break;
         case 'binarySearch':
             generator = binarySearch(this.initialArray, this.targetValue);
+            break;
+        case 'heapSort':
+            generator = heapSort(this.initialArray);
             break;
         case 'dijkstra':
              generator = dijkstra(this.graphData!, this.startNode, this.endNode); 
