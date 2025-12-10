@@ -1,12 +1,27 @@
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { theme } from './theme/theme';
-import AppContent from './AppContent'; // We'll move the current content or create a layout
+import RootLayout from './layouts/RootLayout';
+import HomePage from './pages/HomePage';
+import VisualizerPage from './pages/VisualizerPage';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: 'algorithm/:type', element: <VisualizerPage /> },
+      { path: '*', element: <Navigate to="/" replace /> }
+    ]
+  }
+]);
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppContent />
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
