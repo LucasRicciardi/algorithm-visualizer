@@ -1,4 +1,4 @@
-import { Paper, useTheme, Typography, Box } from '@mui/material';
+import { Paper, Box } from '@mui/material';
 import type { AlgorithmState } from '../types/types';
 
 interface GraphVisualizerProps {
@@ -6,7 +6,6 @@ interface GraphVisualizerProps {
 }
 
 export default function GraphVisualizer({ state }: GraphVisualizerProps) {
-  const theme = useTheme();
   const { graph, history, currentStepIndex, startNode, endNode } = state;
   const currentStep = currentStepIndex >= 0 ? history[currentStepIndex] : null;
 
@@ -124,8 +123,11 @@ export default function GraphVisualizer({ state }: GraphVisualizerProps) {
                 
                 const isActive = currentStep?.indices.includes(node.id);
                 // Check if node is part of current traced path
-                const isInPath = (currentStep?.type === 'path' && currentStep.indices.includes(node.id)) ||
-                                 (currentStep?.path?.includes(node.id));
+                const pathIndices = currentStep?.type === 'path' ? currentStep.indices : currentStep?.path;
+                const isInPath = pathIndices?.includes(node.id);
+                
+                // Identify the "Current Node" (frontier) - usually the last node in the current path if we are visiting/exploring
+                const isCurrentNode = pathIndices && pathIndices[pathIndices.length - 1] === node.id && currentStep?.type !== 'path';
 
                 if (isActive) {
                     if (currentStep?.type === 'visit') {
@@ -135,31 +137,38 @@ export default function GraphVisualizer({ state }: GraphVisualizerProps) {
                     } else if (currentStep?.type === 'highlight') {
                         fill = '#2979FF';
                     } else if (currentStep?.type === 'relax') {
-                        fill = '#00E676';
+                        fill = '#00E676'; // Neighbor being relaxed
                         glow = '0 0 15px #00E676';
                     } else if (currentStep?.type === 'compare') {
-                         fill = '#FFD600';
+                         fill = '#FFD600'; // Neighbor being compared
                     } 
                 }
                 
-                // Static overrides
+                if (isCurrentNode && currentStep?.type !== 'relax') {
+                     // Current Node (Head of Path)
+                     // Make it Purple to match path, but with specific highlight (e.g. White Stroke)
+                     fill = '#D500F9';
+                     stroke = '#ffffff';
+                     glow = '0 0 20px #D500F9';
+                     strokeWidth = 3;
+                }
+
+                // Static overrides for start/end
                 if (node.id === startNode) {
                     stroke = '#00E676'; // Start Green
-                    if (!isActive && !isInPath) fill = 'rgba(0, 230, 118, 0.2)';
-                    if (isInPath) fill = '#00E676'; // Filled if in path
+                    if (!isActive && !isCurrentNode && !isInPath) fill = 'rgba(0, 230, 118, 0.2)';
+                    if (isInPath) fill = '#00E676'; 
                 } else if (node.id === endNode) {
                     stroke = '#FF1744'; // Target Red
-                    if (!isActive && !isInPath) fill = 'rgba(255, 23, 68, 0.2)';
+                    if (!isActive && !isCurrentNode && !isInPath) fill = 'rgba(255, 23, 68, 0.2)';
                     if (isInPath) fill = '#FF1744';
                 }
 
-                if (isInPath) {
-                    // Normalize path color unless it's start/end specialized
-                    if (node.id !== startNode && node.id !== endNode) {
-                        stroke = '#D500F9';
-                        fill = '#D500F9';
-                        glow = '0 0 20px #D500F9';
-                    }
+                if (isInPath && !isCurrentNode && node.id !== startNode && node.id !== endNode) {
+                    // Path nodes (body of snake)
+                    stroke = '#D500F9';
+                    fill = '#D500F9';
+                    glow = '0 0 10px #D500F9';
                 }
                 
                 return (

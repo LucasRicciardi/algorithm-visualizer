@@ -53,6 +53,17 @@ export function* dijkstra(graph: GraphData, startNodeId: number, endNodeId: numb
             path: currentPath,
             description: `Visit node ${minNodeId} with current distance ${Math.floor(minDistance)}.`
         };
+
+        if (endNodeId !== -1 && minNodeId === endNodeId) {
+             yield {
+                 type: 'path',
+                 indices: currentPath,
+                 path: currentPath,
+                 description: `Target node ${endNodeId} reached! Shortest path found: ${currentPath.join(' -> ')}`,
+                 line: 8
+             };
+             return; // Stop once target found
+        }
         
         // Get neighbors
         const neighbors = edges.filter(e => e.source === minNodeId || e.target === minNodeId);
@@ -64,6 +75,7 @@ export function* dijkstra(graph: GraphData, startNodeId: number, endNodeId: numb
             yield {
                 type: 'compare',
                 indices: [minNodeId, neighborId],
+                path: currentPath,
                 description: `Check neighbor ${neighborId} via edge weight ${edge.weight}.`,
                 edge: { source: minNodeId, target: neighborId }
             };
@@ -75,7 +87,8 @@ export function* dijkstra(graph: GraphData, startNodeId: number, endNodeId: numb
                 
                 yield {
                     type: 'relax',
-                    indices: [neighborId],
+                    indices: [minNodeId, neighborId], // Include both for context
+                    path: currentPath, 
                     value: alt,
                     description: `Update distance of node ${neighborId} to ${Math.floor(alt)}.`,
                     edge: { source: minNodeId, target: neighborId }
