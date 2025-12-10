@@ -40,6 +40,14 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  /* Dark tech background */
+  background-color: #050a10;
+  background-image:
+      radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.05) 0%, transparent 50%),
+      linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 50px 50px, 50px 50px;
+  background-attachment: fixed;
 }
 
 h1 {
