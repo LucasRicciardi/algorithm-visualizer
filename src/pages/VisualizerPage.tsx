@@ -25,6 +25,8 @@ export default function VisualizerPage() {
   const controllerRef = useRef<AlgorithmController | null>(null);
 
   const [targetValue, setTargetValue] = useState(42);
+  const [startNode, setStartNode] = useState(0);
+  const [endNode, setEndNode] = useState(49);
 
   useEffect(() => {
       // Initialize controller on mount
@@ -42,7 +44,9 @@ export default function VisualizerPage() {
           controllerRef.current.reset(sortedData);
       }
       
+      
       controllerRef.current.setTarget(targetValue);
+      controllerRef.current.setGraphParams(startNode, endNode);
       
       return () => {
           if (controllerRef.current) {
@@ -57,6 +61,9 @@ export default function VisualizerPage() {
           // If switching to search, make sure target is set
           if (currentAlgo === 'linearSearch' || currentAlgo === 'binarySearch') {
               controllerRef.current.setTarget(targetValue);
+          }
+          if (currentAlgo === 'dijkstra') {
+              controllerRef.current.setGraphParams(startNode, endNode);
           }
           
           // If switching to binary search, sort the current data
@@ -114,6 +121,19 @@ export default function VisualizerPage() {
       controllerRef.current?.reset(data);
   };
 
+  const handleGraphParamChange = (type: 'start' | 'end', val: string) => {
+      const num = parseInt(val);
+      if (!isNaN(num)) {
+          if (type === 'start') {
+              setStartNode(num);
+              controllerRef.current?.setGraphParams(num, endNode);
+          } else {
+              setEndNode(num);
+              controllerRef.current?.setGraphParams(startNode, num);
+          }
+      }
+  };
+
   const handleTargetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = parseInt(e.target.value);
       if (!isNaN(val)) {
@@ -166,6 +186,30 @@ export default function VisualizerPage() {
                          disabled={algoState.isPlaying}
                      />
                  )}
+                 
+                 {currentAlgo === 'dijkstra' && (
+                     <>
+                        <TextField 
+                            label="Source" 
+                            type="number" 
+                            size="small" 
+                            value={startNode} 
+                            onChange={(e) => handleGraphParamChange('start', e.target.value)}
+                            sx={{ width: 80 }}
+                            disabled={algoState.isPlaying}
+                        />
+                         <TextField 
+                            label="Target" 
+                            type="number" 
+                            size="small" 
+                            value={endNode} 
+                            onChange={(e) => handleGraphParamChange('end', e.target.value)}
+                            sx={{ width: 80 }}
+                            disabled={algoState.isPlaying}
+                        />
+                     </>
+                 )}
+
                  <AlgorithmSelector value={currentAlgo} onChange={handleAlgoChange} disabled={algoState.isPlaying} />
                  <Button variant="outlined" color="primary" onClick={() => setIsInputOpen(true)}>
                   Custom Input

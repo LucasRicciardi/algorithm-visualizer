@@ -18,7 +18,9 @@ export class AlgorithmController {
   private timerId: ReturnType<typeof setInterval> | null = null;
   private onStateChange: (state: AlgorithmState) => void;
   private currentAlgorithm: AlgorithmType = 'bubbleSort';
-  private targetValue: number = 0; 
+  private targetValue: number = 0; // Default target
+  private startNode: number = 0; // Dijkstra Start
+  private endNode: number = 49; // Dijkstra End
 
   constructor(initialArray: number[], onStateChange: (state: AlgorithmState) => void) {
     this.initialArray = [...initialArray];
@@ -36,8 +38,18 @@ export class AlgorithmController {
   public setTarget(target: number) {
       if (this.targetValue === target) return;
       this.targetValue = target;
+      // Only reset steps if current algorithm is a search algorithm
       if (this.currentAlgorithm === 'linearSearch' || this.currentAlgorithm === 'binarySearch') {
-          this.reset(); 
+          this.reset();
+      }
+  }
+
+  public setGraphParams(start: number, end: number) {
+      if (this.startNode === start && this.endNode === end) return;
+      this.startNode = start;
+      this.endNode = end;
+      if (this.currentAlgorithm === 'dijkstra') {
+          this.reset(undefined, true); // Keep graph, just regen steps
       }
   }
 
@@ -45,27 +57,34 @@ export class AlgorithmController {
       return this.currentAlgorithm;
   }
 
-  private generateRandomGraph(nodeCount: number = 6): GraphData {
+  private generateRandomGraph(nodeCount: number = 50): GraphData {
        const nodes: GraphNode[] = [];
        const edges: GraphEdge[] = [];
-       const width = 800; 
-       const height = 400; 
+       const width = 800; // Canvas abstract width
+       const height = 400; // Canvas abstract height
        
+       // Generate Nodes
        for (let i = 0; i < nodeCount; i++) {
            nodes.push({
                id: i,
-               x: Math.random() * (width - 100) + 50,
-               y: Math.random() * (height - 100) + 50
+               x: Math.random() * (width - 50) + 25,
+               y: Math.random() * (height - 50) + 25
            });
        }
 
+       // Generate Edges (Random connections)
+       // Ensure connectivity (connect i to i+1 usually ensures string connectivity)
+       // For 50 nodes, we want a bit more density but not too messy.
        for (let i = 0; i < nodeCount; i++) {
+           // Always connect to next one (circular or line) to ensure some edges
            if (i < nodeCount - 1) {
                 const weight = Math.floor(Math.random() * 20) + 1;
                 edges.push({ source: i, target: i + 1, weight });
            }
 
-           const extraEdges = Math.floor(Math.random() * 2);
+           // Add random extra edges - reduce density slightly for 50 nodes so it's viewable
+           // Let's say each node has chance to connect to 1-2 others nearby or random.
+           const extraEdges = Math.floor(Math.random() * 2); // 0 or 1 extra edge per node
            for (let j = 0; j < extraEdges; j++) {
                const target = Math.floor(Math.random() * nodeCount);
                if (target !== i && !edges.some(e => (e.source === i && e.target === target) || (e.source === target && e.target === i))) {
@@ -80,6 +99,7 @@ export class AlgorithmController {
   private generateSteps() {
     let generator;
     
+    // If Dijkstra, we need a graph. If not present, generate one.
     if (this.currentAlgorithm === 'dijkstra' && !this.graphData) {
         this.graphData = this.generateRandomGraph();
     }
@@ -98,7 +118,7 @@ export class AlgorithmController {
             generator = binarySearch(this.initialArray, this.targetValue);
             break;
         case 'dijkstra':
-             generator = dijkstra(this.graphData!, 0); 
+             generator = dijkstra(this.graphData!, this.startNode, this.endNode); 
              break;
         case 'bubbleSort':
         default:
@@ -160,15 +180,15 @@ export class AlgorithmController {
       this.emitState(); 
   }
 
-  public reset(newArray?: number[]) {
+  public reset(newArray?: number[], keepGraph: boolean = false) {
       this.pause();
       if (newArray) {
           this.initialArray = [...newArray];
       }
       
-      if (this.currentAlgorithm === 'dijkstra') {
+      if (this.currentAlgorithm === 'dijkstra' && !keepGraph) {
            this.graphData = this.generateRandomGraph();
-      } else {
+      } else if (this.currentAlgorithm !== 'dijkstra') {
            this.graphData = undefined;
       }
 
