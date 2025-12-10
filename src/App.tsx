@@ -1,6 +1,6 @@
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
-import { theme } from './theme/theme';
+import theme from './theme/theme';
 import RootLayout from './layouts/RootLayout';
 import HomePage from './pages/HomePage';
 import VisualizerPage from './pages/VisualizerPage';

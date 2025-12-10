@@ -111,6 +111,37 @@ const theme = createTheme({
             }
         }
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#00E5FF',
+          border: '1px solid rgba(0, 229, 255, 0.3)',
+          backdropFilter: 'blur(4px)',
+          background: 'rgba(0, 229, 255, 0.05)',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            background: 'rgba(0, 229, 255, 0.1)',
+            boxShadow: '0 0 15px rgba(0, 229, 255, 0.5)',
+            transform: 'scale(1.1)',
+            border: '1px solid rgba(0, 229, 255, 0.8)',
+          },
+          '&.Mui-disabled': {
+              color: 'rgba(255, 255, 255, 0.3)',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+          }
+        }
+      }
+    },
+    MuiTypography: {
+        styleOverrides: {
+            h1: {
+                textShadow: '0 0 10px rgba(0, 229, 255, 0.5), 0 0 20px rgba(0, 229, 255, 0.3)',
+            },
+            h4: {
+                textShadow: '0 0 5px rgba(0, 229, 255, 0.5)',
+            }
+        }
+    },
     MuiSlider: {
         styleOverrides: {
             root: {

@@ -66,31 +66,42 @@ const PSEUDOCODES: Record<string, typeof PSEUDOCODE_BUBBLE> = {
 };
 
 export default function CodeViewer({ currentLine, algorithm = 'bubbleSort' }: CodeViewerProps) {
-    const theme = useTheme();
     const code = PSEUDOCODES[algorithm] || PSEUDOCODE_BUBBLE;
-    
+    const theme = useTheme();
+
     return (
-        <Paper elevation={3} sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 2 }}>
-            <Typography variant="h6" gutterBottom color="primary">
-                {algorithm === 'mergeSort' ? 'Merge Sort' : 'Bubble Sort'} Pseudocode
+        <Paper 
+            elevation={3} 
+            sx={{ 
+                p: 2, 
+                bgcolor: 'rgba(0, 0, 0, 0.6)', 
+                fontFamily: 'monospace',
+                fontSize: '0.9rem',
+                border: `1px solid ${theme.palette.secondary.main}`,
+                boxShadow: `0 0 15px ${theme.palette.secondary.main}40`, // Transparent neon green glow
+                minHeight: '200px'
+            }}
+        >
+            <Typography variant="h6" gutterBottom sx={{ color: theme.palette.secondary.main, textShadow: `0 0 5px ${theme.palette.secondary.main}` }}>
+                {algorithm === 'mergeSort' ? 'Merge Sort' : algorithm === 'quickSort' ? 'Quick Sort' : algorithm === 'linearSearch' ? 'Linear Search' : algorithm === 'binarySearch' ? 'Binary Search' : 'Bubble Sort'} Pseudocode
             </Typography>
-            <Box component="pre" sx={{ m: 0, fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                {code.map((item) => (
-                    <Box 
-                        key={item.line}
-                        sx={{ 
-                            p: 0.5, 
-                            borderRadius: 1,
-                            bgcolor: currentLine === item.line ? 'rgba(124, 77, 255, 0.2)' : 'transparent',
-                            color: currentLine === item.line ? theme.palette.primary.light : 'text.secondary',
-                            borderLeft: currentLine === item.line ? `4px solid ${theme.palette.primary.main}` : '4px solid transparent',
-                            pl: 2
-                        }}
-                    >
-                        {item.text}
-                    </Box>
-                ))}
-            </Box>
+            {code.map((line) => (
+                <Box 
+                    key={line.line}
+                    sx={{
+                        color: currentLine === line.line ? '#000' : 'text.secondary',
+                        bgcolor: currentLine === line.line ? theme.palette.primary.main : 'transparent',
+                        p: 0.5,
+                        borderRadius: 1,
+                        pl: line.text.startsWith('  ') ? 4 : line.text.startsWith('    ') ? 6 : 1, // Simple indentation handling
+                        transition: 'background-color 0.2s',
+                        boxShadow: currentLine === line.line ? `0 0 10px ${theme.palette.primary.main}` : 'none',
+                        fontWeight: currentLine === line.line ? 'bold' : 'normal'
+                    }}
+                >
+                    {line.text}
+                </Box>
+            ))}
         </Paper>
     );
 }
