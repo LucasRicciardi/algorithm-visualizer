@@ -25,6 +25,12 @@ const ALGORITHMS = [
                 title: 'Quick Sort',
                 description: 'An efficient, divide-and-conquer sorting algorithm.',
                 icon: <BoltIcon fontSize="large" sx={{ color: '#ff9100' }} />
+            },
+            {
+                id: 'heapSort',
+                title: 'Heap Sort',
+                description: 'A comparison-based sorting technique based on Binary Heap data structure.',
+                icon: <BarChartIcon fontSize="large" sx={{ color: '#d500f9' }} />
             }
         ]
     },
