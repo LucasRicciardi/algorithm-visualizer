@@ -1,5 +1,8 @@
-import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Toolbar, Typography, Link, Stack, IconButton } from '@mui/material';
 import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import EmailIcon from '@mui/icons-material/Email';
 
 export default function RootLayout() {
   const location = useLocation();
@@ -31,10 +34,23 @@ export default function RootLayout() {
         <Outlet />
       </Box>
 
-        <Box component="footer" sx={{ p: 2, textAlign: 'center', bgcolor: 'background.paper', mt: 'auto' }}>
-            <Typography variant="caption" color="text.secondary">
-                Built with React, Vite & MUI
-            </Typography>
+        <Box component="footer" sx={{ p: 3, textAlign: 'center', bgcolor: 'background.paper', mt: 'auto', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <Stack direction="column" spacing={1} alignItems="center">
+                <Typography variant="body2" color="text.secondary">
+                    Author: <strong>Lucas Ricciardi de Salles</strong>
+                </Typography>
+                <Stack direction="row" spacing={2}>
+                    <IconButton component={Link} href="mailto:lucas.ricciardi@outlook.com" target="_blank" color="inherit" aria-label="email">
+                        <EmailIcon />
+                    </IconButton>
+                    <IconButton component={Link} href="https://www.linkedin.com/in/lucas-ricciardi-de-salles-a59724149/" target="_blank" color="inherit" aria-label="linkedin">
+                        <LinkedInIcon />
+                    </IconButton>
+                     <IconButton component={Link} href="https://github.com/LucasRicciardi" target="_blank" color="inherit" aria-label="github">
+                        <GitHubIcon />
+                    </IconButton>
+                </Stack>
+            </Stack>
         </Box>
     </Box>
   );
