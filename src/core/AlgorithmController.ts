@@ -64,12 +64,33 @@ export class AlgorithmController {
        const height = 400; // Canvas abstract height
        
        // Generate Nodes
+       // Generate Nodes
+       const minDistance = 60; // Minimum distance between nodes to prevent overlap
        for (let i = 0; i < nodeCount; i++) {
-           nodes.push({
-               id: i,
-               x: Math.random() * (width - 50) + 25,
-               y: Math.random() * (height - 50) + 25
-           });
+           let x = 0, y = 0;
+           let attempts = 0;
+           let validPosition = false;
+
+           while (!validPosition && attempts < 100) {
+                x = Math.random() * (width - 100) + 50; // Keep away from edges
+                y = Math.random() * (height - 100) + 50;
+                
+                validPosition = true;
+                for (const node of nodes) {
+                    const dx = node.x - x;
+                    const dy = node.y - y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < minDistance) {
+                        validPosition = false;
+                        break;
+                    }
+                }
+                attempts++;
+           }
+           
+           // If we couldn't find a valid position after 100 tries, use the last random one
+           // (Rare with 25 nodes on 800x400 canvas)
+           nodes.push({ id: i, x, y });
        }
 
        // Generate Edges (Random connections)
