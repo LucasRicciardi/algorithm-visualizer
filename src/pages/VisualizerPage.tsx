@@ -73,11 +73,13 @@ export default function VisualizerPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
              <Box>
                  <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : 'Bubble Sort'}
+                  {currentAlgo === 'mergeSort' ? 'Merge Sort' : currentAlgo === 'quickSort' ? 'Quick Sort' : 'Bubble Sort'}
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                     {currentAlgo === 'mergeSort' 
-                        ? "Merge Sort is a divide-and-conquer algorithm that divides the input array into two halves, calls itself for the two halves, and then merges the two sorted halves." 
+                        ? "Merge Sort is a divide-and-conquer algorithm that divides the input array into two halves, calls itself for the two halves, and then merges the two sorted halves."
+                        : currentAlgo === 'quickSort'
+                        ? "Quick Sort is a highly efficient sorting algorithm and is based on partitioning of array of data into smaller arrays."
                         : "Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order."}
                 </Typography>
              </Box>
@@ -123,10 +125,10 @@ export default function VisualizerPage() {
                  <Box sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 2 }}>
                     <Typography variant="h6" color="primary">Complexity</Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Time: {currentAlgo === 'mergeSort' ? 'O(N log N)' : 'O(N²)'}
+                        Time: {currentAlgo === 'mergeSort' || currentAlgo === 'quickSort' ? 'O(N log N)' : 'O(N²)'}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                         Space: {currentAlgo === 'mergeSort' ? 'O(N)' : 'O(1)'}
+                         Space: {currentAlgo === 'mergeSort' ? 'O(N)' : currentAlgo === 'quickSort' ? 'O(log N)' : 'O(1)'}
                     </Typography>
                     
                     <Typography variant="h6" color="primary" sx={{ mt: 2 }}>Stats</Typography>

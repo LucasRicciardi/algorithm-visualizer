@@ -25,9 +25,24 @@ const PSEUDOCODE_MERGE = [
     // Simplified representation mappings
 ];
 
+const PSEUDOCODE_QUICK = [
+    { line: 1, text: 'quickSort(arr, low, high):' },
+    { line: 2, text: '  if low < high:' },
+    { line: 3, text: '    pi = partition(arr, low, high)' }, // pivot index
+    { line: 4, text: '    quickSort(arr, low, pi - 1)' },
+    { line: 5, text: '    quickSort(arr, pi + 1, high)' },
+    { line: 6, text: 'partition(arr, low, high):' },
+    { line: 7, text: '  pivot = arr[high]; i = low - 1' },
+    { line: 8, text: '  for j = low to high - 1:' },
+    { line: 9, text: '    if arr[j] < pivot: i++; swap(arr[i], arr[j])' },
+    { line: 10, text: '  swap(arr[i + 1], arr[high])' },
+    { line: 11, text: '  return i + 1' },
+];
+
 const PSEUDOCODES: Record<string, typeof PSEUDOCODE_BUBBLE> = {
     'bubbleSort': PSEUDOCODE_BUBBLE,
-    'mergeSort': PSEUDOCODE_MERGE
+    'mergeSort': PSEUDOCODE_MERGE,
+    'quickSort': PSEUDOCODE_QUICK
 };
 
 export default function CodeViewer({ currentLine, algorithm = 'bubbleSort' }: CodeViewerProps) {

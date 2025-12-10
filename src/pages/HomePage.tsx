@@ -2,6 +2,7 @@ import { Container, Card, CardActionArea, CardContent, Typography, Box } from '@
 import { useNavigate } from 'react-router-dom';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
+import BoltIcon from '@mui/icons-material/Bolt';
 
 const ALGORITHMS = [
     {
@@ -15,6 +16,12 @@ const ALGORITHMS = [
         title: 'Merge Sort',
         description: 'A divide-and-conquer sorting algorithm.',
         icon: <CallSplitIcon fontSize="large" color="secondary" />
+    },
+    {
+        id: 'quickSort',
+        title: 'Quick Sort',
+        description: 'An efficient, divide-and-conquer sorting algorithm.',
+        icon: <BoltIcon fontSize="large" sx={{ color: '#ff9100' }} />
     }
 ];
 

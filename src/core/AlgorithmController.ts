@@ -1,8 +1,9 @@
 import type { AlgorithmState, AlgorithmStep } from '../types/types';
 import { bubbleSort } from './algorithms/bubbleSort';
 import { mergeSort } from './algorithms/mergeSort';
+import { quickSort } from './algorithms/quickSort';
 
-type AlgorithmType = 'bubbleSort' | 'mergeSort';
+type AlgorithmType = 'bubbleSort' | 'mergeSort' | 'quickSort';
 
 export class AlgorithmController {
   private initialArray: number[];
@@ -32,9 +33,19 @@ export class AlgorithmController {
   }
 
   private generateSteps() {
-    const generator = this.currentAlgorithm === 'mergeSort' 
-        ? mergeSort(this.initialArray) 
-        : bubbleSort(this.initialArray);
+    let generator;
+    switch (this.currentAlgorithm) {
+        case 'mergeSort':
+            generator = mergeSort(this.initialArray);
+            break;
+        case 'quickSort':
+            generator = quickSort(this.initialArray);
+            break;
+        case 'bubbleSort':
+        default:
+            generator = bubbleSort(this.initialArray);
+            break;
+    }
         
     this.steps = [];
     for (const step of generator) {

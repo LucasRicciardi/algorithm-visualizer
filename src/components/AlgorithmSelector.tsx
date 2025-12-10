@@ -28,6 +28,7 @@ export default function AlgorithmSelector({ value, onChange, disabled }: Algorit
                 >
                     <MenuItem value="bubbleSort">Bubble Sort</MenuItem>
                     <MenuItem value="mergeSort">Merge Sort</MenuItem>
+                    <MenuItem value="quickSort">Quick Sort</MenuItem>
                 </Select>
             </FormControl>
         </Box>
